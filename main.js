@@ -32,12 +32,28 @@ var hsv;
 var title;
 var hsv_it;
 
+var srcode = [
+  ['cpp',1],
+  ['cpp',2],
+  ['cpp',3],
+  ['cpp',4],
+  ['cpp',5],
+  ['cpp',6],
+  ['cpp',7],
+  ['cpp',8],
+  ['cpp',9],
+  ['cpp',10],
+  ['cpp',11],
+  ['cpp',12],
+  ['kt',1],
+  ['kt',2],
+];
+
 function preload(){
-  var rdm = Phaser.Math.Between(1,7);
-  this.load.text('code', './assets/srcode/cpp/code' + rdm.toString() + ".cpp");
+  var lang = Phaser.Math.Between(1,srcode.length);
+  this.load.text('code', './assets/srcode/' + srcode[lang][0] + '/code' + srcode[lang][1].toString() + "." + srcode[lang][0]);
 
   var sountPath = "./assets/audio/";
-
   this.load.audio('bass', [ sountPath + 'bass.ogg', sountPath + 'bass.mp3' ]);
   this.load.audio('drums', [ sountPath + 'drums.ogg', sountPath + 'drums.mp3' ]);
   this.load.audio('percussion', [ sountPath + 'percussion.ogg', sountPath + 'percussion.mp3' ]);
@@ -218,7 +234,7 @@ function create(){
   nextIndex = 0;
   currentRow = 0;
   currentColumn = 0;
-  currentSound = 8;
+  currentSound = 7;
 
   if ( this.sound.locked ){
     this.sound.once('unlocked', function(){
@@ -227,7 +243,7 @@ function create(){
       begun = true;
       withMusic = true;
       for ( var i = 0; i < textFull.length ; i++ ) textFull[i].visible = true;
-      playlist[currentSound].play();
+      playlist[8].play();
     });
   }
 }
@@ -771,7 +787,7 @@ function update( time, delta ){
   if ( cursors.closed_bracket.isUp && ( pressed[']'] || pressed['}'] ) == true ) pressed[']'] = pressed['}'] = false;
   if ( cursors.back_slash.isUp && (pressed['\\'] || pressed['|']) == true ) pressed['\\'] = pressed['|'] = false;
   if ( cursors.semicolon.isUp && (pressed[';'] || pressed[':']) == true ) pressed[';'] = pressed[':'] = false;
-  if ( cursors.quotes.isUp && (pressed["'"] || pressed['\'']) == true ) pressed["'11"] = pressed['\''] = false;
+  if ( cursors.quotes.isUp && (pressed["'"] || pressed['\"']) == true ) pressed["'"] = pressed['\"'] = false;
   if ( cursors.comma.isUp && ( pressed[','] || pressed['<'] ) == true ) pressed[','] = pressed['<'] = false;
   if ( cursors.period.isUp && ( pressed['.'] || pressed['>'] ) == true ) pressed['.'] = pressed['>'] = false;
   if ( cursors.forward_slash.isUp && ( pressed['/'] || pressed['?'] ) == true ) pressed['/'] = pressed['?'] = false;
@@ -814,7 +830,7 @@ function update( time, delta ){
     typingSound.play();
   }
 
-  if ( !playlist[currentSound].isPlaying ){
+  if ( !playlist[currentSound].isPlaying && !playlist[8].isPlaying ){
     soundLoop--;
     if ( soundLoop == 0 ){
       soundLoop = 2;

@@ -1,6 +1,6 @@
 vector < int > A, T;
 
-void merge( int L, int M, int R ){
+void sort( int L, int M, int R ){
   int lptr = L, rptr = M+1;
   for ( int i = L; i <= R; i++ ){
     if ( lptr <= M && rptr <= R ){
@@ -18,10 +18,10 @@ void merge( int L, int M, int R ){
   for ( int i = L; i <= R; i++ ) A[i] = T[i];
 }
 
-void mergeSort( int L, int R ){
+void recursive( int L, int R ){
   if ( L >= R ) return;
   int middle = ( L + R ) / 2;
-  mergeSort(L,middle);
-  mergeSort(middle+1,R);
-  merge(L,middle,R);
+  recursive(L,middle);
+  recursive(middle+1,R);
+  sort(L,middle,R);
 }

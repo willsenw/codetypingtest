@@ -15,7 +15,7 @@ bool isEqual( string pat, string text ){
   return valid;
 }
 
-bool checkPalindrome( string sent ){
+bool check( string sent ){
   string rev = sent;
   int l = 0, r = (int)(rev.size()-1);
   while ( l < r ){
