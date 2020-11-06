@@ -4,8 +4,8 @@ var config = {
       mode: Phaser.Scale.FIT,
       parent: 'phaser-example',
       autoCenter: Phaser.Scale.CENTER_BOTH,
-      width: 800,
-      height: 600
+      width: 1000,
+      height: 800
   },
   backgroundColor : '#000000',
   scene : {
@@ -17,7 +17,7 @@ var config = {
 var game = new Phaser.Game(config);
 var txt,arr_text;
 var cursors;
-var text;
+var textFull;
 var nextIndex, currentRow, currentColumn;
 var cursors, ascii;
 var pressed = {};
@@ -38,13 +38,13 @@ function preload(){
 
   var sountPath = "./assets/audio/";
 
-  //this.load.audio('bass', [ sountPath + 'bass.ogg', sountPath + 'bass.mp3' ]);
-  //this.load.audio('drums', [ sountPath + 'drums.ogg', sountPath + 'drums.mp3' ]);
-  //this.load.audio('percussion', [ sountPath + 'percussion.ogg', sountPath + 'percussion.mp3' ]);
-  //this.load.audio('synth1', [ sountPath + 'synth1.ogg', sountPath + 'synth1.mp3' ]);
-  //this.load.audio('synth2', [ sountPath + 'synth2.ogg', sountPath + 'synth2.mp3' ]);
-  //this.load.audio('top1', [ sountPath + 'top1.ogg', sountPath + 'top1.mp3' ]);
-  //this.load.audio('top2', [ sountPath + 'top2.ogg', sountPath + 'top2.mp3' ]);
+  this.load.audio('bass', [ sountPath + 'bass.ogg', sountPath + 'bass.mp3' ]);
+  this.load.audio('drums', [ sountPath + 'drums.ogg', sountPath + 'drums.mp3' ]);
+  this.load.audio('percussion', [ sountPath + 'percussion.ogg', sountPath + 'percussion.mp3' ]);
+  this.load.audio('synth1', [ sountPath + 'synth1.ogg', sountPath + 'synth1.mp3' ]);
+  this.load.audio('synth2', [ sountPath + 'synth2.ogg', sountPath + 'synth2.mp3' ]);
+  this.load.audio('top1', [ sountPath + 'top1.ogg', sountPath + 'top1.mp3' ]);
+  this.load.audio('top2', [ sountPath + 'top2.ogg', sountPath + 'top2.mp3' ]);
   this.load.audio("type", ["./assets/audio/touchtype.mp3"]);
 }
 
@@ -173,47 +173,48 @@ function create(){
     z : this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
     zero : this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ZERO)
   };
-  //playlist = playlist.concat([this.sound.add('drums')]);
-  //playlist = playlist.concat([this.sound.add('synth1')]);
-  //playlist = playlist.concat([this.sound.add('top1')]);
-  //playlist = playlist.concat([this.sound.add('percussion')]);
-  //playlist = playlist.concat([this.sound.add('drums')]);
-  //playlist = playlist.concat([this.sound.add('synth2')]);
-  //playlist = playlist.concat([this.sound.add('top2')]);
-  //playlist = playlist.concat([this.sound.add('percussion')]);
-  //playlist = playlist.concat([this.sound.add('bass')]);
+  playlist = playlist.concat([this.sound.add('drums')]);
+  playlist = playlist.concat([this.sound.add('synth1')]);
+  playlist = playlist.concat([this.sound.add('top1')]);
+  playlist = playlist.concat([this.sound.add('percussion')]);
+  playlist = playlist.concat([this.sound.add('drums')]);
+  playlist = playlist.concat([this.sound.add('synth2')]);
+  playlist = playlist.concat([this.sound.add('top2')]);
+  playlist = playlist.concat([this.sound.add('percussion')]);
+  playlist = playlist.concat([this.sound.add('bass')]);
   typingSound = this.sound.add('type');
   soundLoop = 2;
   begun = false;
   withMusic = false;
 
-  title = this.add.text(300, 0, 'Code Typing Test', { font: "20px Arial Black", fill: "#fff" });
+  title = this.add.text(350, 0, 'Code Typing Test', { font: "20px Arial Black", fill: "#fff" });
   title.setStroke('#00f', 16);
   title.setShadow(2, 2, "#333333", 2, true, true);
   hsv_it = 0;
 
   var textTemp = this.add.text(10, 60, ['Hello, click anywhere and the timer will start!'], { font: '18px Courier', fill: '#00ff00' });
-  let cache = this.cache.text;
-  let code = cache.get('code');
   pressed[ascii["10"]] = false;
   for ( var c = 31; c < 128; c++ ){
     pressed[ascii[c.toString()]] = false;
   }
 
+  var cache = this.cache.text;
+  var code = cache.get('code');
   txt = code.split('\n');
   arr_text = "";
   for ( let i = 0; i < txt.length; i++ ){
     txt[i] += "\n";
     arr_text = arr_text + txt[i];
   }
+  textFull = [];
   for ( var i = 0; i < txt.length; i++ ){
     for ( var j = 0; j < txt[i].length; j++ ){
-      if ( i == 0 && j == 0 ) text = [this.add.text(j*10,i*20+50,txt[i][j], {fontSize: "20px", fontFamily:"Courier New", fill: "#FFFFFF", align: "center"})];
-      else text = text.concat([this.add.text(j*10,i*20+50,txt[i][j], {fontSize: "20px", fontFamily:"Courier New", fill: "#FFFFFF", align: "center"})]);
+      textFull = textFull.concat([this.add.text(j*10,i*20+50,txt[i][j], {fontSize: "20px", fontFamily:"Courier New", fill: "#FFFFFF", align: "center"})]);
     }
   }
-  for ( var i = 0; i < text.length ; i++ ) text[i].visible = false;
-
+  for ( var i = 0; i < textFull.length ; i++ ) {
+    textFull[i].visible = false;
+  }
   nextIndex = 0;
   currentRow = 0;
   currentColumn = 0;
@@ -221,12 +222,12 @@ function create(){
 
   if ( this.sound.locked ){
     this.sound.once('unlocked', function(){
-      textTemp.setText("");
+      textTemp.visible = false;
       if ( begun ) return;
       begun = true;
       withMusic = true;
-      for ( var i = 0; i < text.length ; i++ ) text[i].visible = true;
-      //playlist[currentSound].play();
+      for ( var i = 0; i < textFull.length ; i++ ) textFull[i].visible = true;
+      playlist[currentSound].play();
     });
   }
 }
@@ -243,9 +244,9 @@ function update( time, delta ){
 
   for ( var i = 0; i < playlist.length; i++ ){
     if ( withMusic ){
-      //playlist[i].setVolume(1);
+      playlist[i].setVolume(1);
     } else {
-      //playlist[i].setVolume(0);
+      playlist[i].setVolume(0);
     }
   }
 
@@ -592,8 +593,8 @@ function update( time, delta ){
   if ( cursors.tab.isDown ){
     if ( ch == ' ' && currentColumn + 1 < txt[currentRow].length && txt[currentRow][currentColumn+1] == ' ' ){
       hit = true;
-      text[nextIndex].setFill("#000000");
-      text[nextIndex].setBackgroundColor("#00FF00");
+      textFull[nextIndex].setFill("#000000");
+      textFull[nextIndex].setBackgroundColor("#00FF00");
       nextIndex++;
       currentColumn++;
       if ( txt[currentRow].length == currentColumn ){
@@ -602,10 +603,10 @@ function update( time, delta ){
         for ( var i = 0; i < txt.length; i++ ){
           for ( var j =0; j < txt[i].length; j++ ){
             if ( i < currentRow ) {
-              text[curIndex].visible = false;
+              textFull[curIndex].visible = false;
             } else {
-              text[curIndex].y =(i-currentRow) * 20 + 50;
-              text[curIndex].x = j * 10;
+              textFull[curIndex].y =(i-currentRow) * 20 + 50;
+              textFull[curIndex].x = j * 10;
             }
             curIndex++;
           }
@@ -790,8 +791,8 @@ function update( time, delta ){
   //=========================
   if ( hit ){
 
-    text[nextIndex].setFill("#000000");
-    text[nextIndex].setBackgroundColor("#00FF00");
+    textFull[nextIndex].setFill("#000000");
+    textFull[nextIndex].setBackgroundColor("#00FF00");
     nextIndex++;
     currentColumn++;
     if ( txt[currentRow].length == currentColumn ){
@@ -800,10 +801,10 @@ function update( time, delta ){
       for ( var i = 0; i < txt.length; i++ ){
         for ( var j =0; j < txt[i].length; j++ ){
           if ( i < currentRow ) {
-            text[curIndex].visible = false;
+            textFull[curIndex].visible = false;
           } else {
-            text[curIndex].y =(i-currentRow) * 20 + 50;
-            text[curIndex].x = j * 10;
+            textFull[curIndex].y =(i-currentRow) * 20 + 50;
+            textFull[curIndex].x = j * 10;
           }
           curIndex++;
         }
@@ -813,7 +814,6 @@ function update( time, delta ){
     typingSound.play();
   }
 
-  return;
   if ( !playlist[currentSound].isPlaying ){
     soundLoop--;
     if ( soundLoop == 0 ){
