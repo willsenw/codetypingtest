@@ -47,6 +47,8 @@ var srcode = [
   ['cpp',12],
   ['kt',1],
   ['kt',2],
+  ['py',1],
+  ['py',2]
 ];
 
 function preload(){
